@@ -1,0 +1,222 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Atlas de Corais de Cabo Verde</title>
+
+    <!-- Leaflet css -->
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin="" />
+
+
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+        }
+        #map {
+            width: 100%;
+            height: 100vh;
+        }
+        .titulomapa{
+        margin: 0; /* Elimina el margen externo */
+        padding: 5px; /* Ajusta el relleno interno si es necesario */
+        font-size: 12px; /* Ajusta el tamaño de fuente si es necesario */
+        line-height: 0.2; /* Controla la altura de la línea */
+        text-align: center;
+        background-color: rgb(251, 245, 236);
+
+        }
+    </style>
+</head>
+<body>
+    <div class="titulomapa">
+        <h1>Atlas de Corais Ilha São Vicente, Cabo Verde</h1>
+    </div>
+
+
+    <div id="map"></div>
+    <div id="timeline"></div>
+
+</body>
+
+    <!-- Leaflet js -->
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""></script>
+
+    <!-- GeoJSON data script -->
+    <script src="./Data/Coral_Algae.js"></script>
+    <script src="./Data/Rock.js"></script>
+    <script src="./Data/Sand.js"></script>
+    <script src="./Data/Seagrass.js"></script>
+    <script src="./Data/PontosCorais.js"></script>
+
+
+    
+    
+    
+    <!-- Custom script -->
+    <script>
+        // Initialize map
+        var map = L.map('map').setView([16.848700017613716, -24.970901489771652], 12.3);
+
+        // Base map layer
+        var Esri_WorldImagery = L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}', {
+            attribution: 'Tiles &copy; Esri &mdash; Source: Esri, i-cubed, USDA, USGS, AEX, GeoEye, Getmapping, Aerogrid, IGN, IGP, UPR-EGP, and the GIS User Community'
+        }).addTo(map);
+
+        // Add GeoJSON layer
+
+        // CORAL 
+        var Coral_Algae = L.geoJSON(Coral_Algae, {
+        style: function(feature) {
+        return {
+            fillColor: 'yellow',
+            color: 'yellow',     // Border color
+            weight: 3,          // Border thickness
+            opacity: 0,        // Border opacity (should be between 0 and 1)
+            fillOpacity: 1,    // Fill opacity
+        };
+        },
+        onEachFeature: function (feature, layer) {
+        if (feature.properties && feature.properties.class) {
+            // Use HTML to make the name bold
+            layer.bindPopup('<strong>' + feature.properties.class + '</strong>');
+        }}}).addTo(map);
+
+
+
+        // ROCK 
+        var Rock = L.geoJSON(Rock, {
+        style: function(feature) {
+        return {
+            fillColor: '#cacbc8',
+            color: '#4d4e4b',     // Border color
+            weight: 3,          // Border thickness
+            opacity: 0,        // Border opacity (should be between 0 and 1)
+            fillOpacity: 1,    // Fill opacity
+        };
+        },
+        onEachFeature: function (feature, layer) {
+        if (feature.properties && feature.properties.class) {
+            // Use HTML to make the name bold
+            layer.bindPopup('<strong>' + feature.properties.class + '</strong>');
+        }}}).addTo(map);
+
+
+
+
+        // Sand 
+        var Sand = L.geoJSON(Sand, {
+        style: function(feature) {
+        return {
+            fillColor: '#f9a030',
+            color: '#f9a030',     // Border color
+            weight: 3,          // Border thickness
+            opacity: 0,        // Border opacity (should be between 0 and 1)
+            fillOpacity: 1,    // Fill opacity
+        };
+        },
+        onEachFeature: function (feature, layer) {
+        if (feature.properties && feature.properties.class) {
+            // Use HTML to make the name bold
+            layer.bindPopup('<strong>' + feature.properties.class + '</strong>');
+        }}}).addTo(map);
+
+
+
+
+        // Seagrass 
+        var Seagrass = L.geoJSON(Seagrass, {
+        style: function(feature) {
+        return {
+            fillColor: '#30f93f',
+            color: '#30f93f',     // Border color
+            weight: 4,          // Border thickness
+            opacity: 0,        // Border opacity (should be between 0 and 1)
+            fillOpacity: 1,    // Fill opacity
+        };
+        },
+        onEachFeature: function (feature, layer) {
+        if (feature.properties && feature.properties.class) {
+            // Use HTML to make the name bold
+            layer.bindPopup('<strong>' + feature.properties.class + '</strong>');
+        }}}).addTo(map);
+
+
+        // Pontos Corais 
+        var PontosCorais = L.geoJSON(PontosCorais, {
+    style: function(feature) {
+        return {
+            fillColor: '#CED5DB',
+            color: 'white',       // Color del borde
+            weight: 1.5,          // Grosor del borde
+            opacity: 0.5,         // Opacidad del borde
+            fillOpacity: 0.5      // Opacidad de relleno
+        };
+    },
+    onEachFeature: function (feature, layer) {
+        if (feature.properties && feature.properties.Name) {
+            // Añadir tooltip con el nombre de la entidad
+            layer.bindTooltip(feature.properties.Name, {
+                permanent: true,      // Tooltip siempre visible
+                direction: 'left',  // Centrar el texto sobre la entidad
+                className: 'cienaga-label'  // Clase CSS para estilo personalizado
+            }).openTooltip();  // Abrir el tooltip automáticamente
+        }}}).addTo(map);
+
+    // Añadir estilo CSS para el tooltip
+    var css = `
+    .cienaga-label {
+        font-size: 10px;      /* Tamaño de la letra */
+        color: white;         /* Color de la letra */
+        background: none;     /* Sin fondo para el tooltip */
+        border: none;         /* Sin borde para el tooltip */
+         
+    }
+    `;
+    var style = document.createElement('style');
+    style.appendChild(document.createTextNode(css));
+    document.head.appendChild(style);
+
+
+        
+
+//////////
+////////// Layer Control Incendios
+//////////
+var overlayMapsIncendios = {
+    
+    "Coral - Algae": Coral_Algae,
+    "Rock": Rock,
+    "Sand": Sand,
+    "Seagrass": Seagrass,
+    "Comunidades de Corais": PontosCorais,
+
+    
+};
+
+// Crear el control de capas 
+var layerControlIncendios = L.control.layers(null, overlayMapsIncendios, { collapsed: false, position: 'topright' })
+.addTo(map);
+
+// Seleccionar el contenedor del control de capas
+var layerControlContainerIncendios = layerControlIncendios.getContainer();
+
+
+// Crear el elemento de título para los incendios
+var titleElementIncendios = document.createElement('div');
+titleElementIncendios.innerHTML = "<strong>Ecossistemas Marinhos</strong>";
+titleElementIncendios.style.textAlign = 'center';
+titleElementIncendios.style.padding = '5px';
+titleElementIncendios.style.fontSize = '16px';
+titleElementIncendios.style.backgroundColor = '#ffffff';
+titleElementIncendios.style.marginBottom = '0px';
+layerControlContainerIncendios.style.marginTop = '0px';
+
+// Insertar el título antes del contenido del control de capas
+layerControlContainerIncendios.parentNode.insertBefore(titleElementIncendios, layerControlContainerIncendios);
+
+    </script>
+</body>
+</html>
+
